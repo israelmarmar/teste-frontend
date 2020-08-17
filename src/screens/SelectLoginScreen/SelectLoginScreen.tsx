@@ -12,6 +12,7 @@ export default function SelectLoginScreen() {
   const { navigate } = useNavigation();
 
   function onLoginSuccess(googleProfileData: any) {
+    console.log("googleProfileData: "+JSON.stringify(googleProfileData));
     navigate('Home', googleProfileData);
   }
 
@@ -30,13 +31,13 @@ export default function SelectLoginScreen() {
         redirectUrl: AppAuth.OAuthRedirect + ':/oauthredirect'
       });
 
-      console.log(result);
 
       if (result.idToken) {
         await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
         const credential = firebase.auth.GoogleAuthProvider.credential(result.idToken, result.accessToken);
-        const googleProfileData = await firebase.auth().signInWithCredential(credential);
-        onLoginSuccess(googleProfileData);
+        const googleProfileData = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
+        onLoginSuccess({ country: googleProfileData.additionalUserInfo.profile.locale, 
+          fullName: googleProfileData.additionalUserInfo.profile.name});
       }
     } catch ({ message }) {
       alert('login: Error:' + message);

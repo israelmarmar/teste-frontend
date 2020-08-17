@@ -35,7 +35,7 @@ export default function App() {
           .catch((error) => {
             setLoading(false)
           });
-          console.log(user);
+        console.log(user);
       } else {
         setLoading(false)
       }
@@ -52,16 +52,21 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
-          <Stack.Screen name="Home">
-            {props =><HomeScreen {...user}/>}
-          </Stack.Screen>
+          <>
+            <Stack.Screen name="Home">
+              {props => <HomeScreen {...(props.route.params ? props: user)} />}
+            </Stack.Screen>
+            <Stack.Screen name="Select" component={SelectLoginScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Registration" component={RegistrationScreen} />
+          </>
         ) : (
             <>
               <Stack.Screen name="Select" component={SelectLoginScreen} />
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="Registration" component={RegistrationScreen} />
               <Stack.Screen name="Home">
-                {props => <HomeScreen  {...props}/>}
+                {props => <HomeScreen  {...(props.route.params)} />}
               </Stack.Screen>
             </>
           )}

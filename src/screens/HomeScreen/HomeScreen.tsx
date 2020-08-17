@@ -25,8 +25,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ email, fullName, country }) => 
     
             </View>
 
-            <TouchableOpacity onPress={()=>{firebase.auth().signOut();navigate("Home");}}>
-                    <Text style={styles.other}>Sair</Text>
+            <TouchableOpacity style={styles.button} onPress={()=>{firebase.auth().signOut();navigate('Select');}}>
+                    <Text style={styles.buttonTitle}>Sair</Text>
             </TouchableOpacity>
 
         </View>
