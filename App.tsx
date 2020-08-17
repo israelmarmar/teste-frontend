@@ -1,21 +1,71 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+import { LoginScreen, HomeScreen, RegistrationScreen, SelectLoginScreen } from './src/screens'
+import { firebase } from './src/firebase/config'
+import { decode, encode } from 'base-64'
+import HomeScreenProps from './src/screens/HomeScreen/HomeScreen'
+import {
+  GoogleSignin
+} from '@react-native-community/google-signin'
+
+if (!global.btoa) { global.btoa = encode }
+if (!global.atob) { global.atob = decode }
+
+const Stack = createStackNavigator();
 
 export default function App() {
+
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<HomeScreenProps>(null);
+
+  useEffect(() => {
+    const usersRef = firebase.firestore().collection('users');
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        usersRef
+          .doc(user.uid)
+          .get()
+          .then((document) => {
+            const userData = document.data()
+            setLoading(false);
+            setUser(userData);
+          })
+          .catch((error) => {
+            setLoading(false)
+          });
+          console.log(user);
+      } else {
+        setLoading(false)
+      }
+    });
+  }, []);
+
+  if (loading) {
+    return (
+      <></>
+    )
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {user ? (
+          <Stack.Screen name="Home">
+            {props =><HomeScreen {...user}/>}
+          </Stack.Screen>
+        ) : (
+            <>
+              <Stack.Screen name="Select" component={SelectLoginScreen} />
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="Registration" component={RegistrationScreen} />
+              <Stack.Screen name="Home">
+                {props => <HomeScreen  {...props}/>}
+              </Stack.Screen>
+            </>
+          )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
