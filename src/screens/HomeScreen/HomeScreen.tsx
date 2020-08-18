@@ -1,5 +1,5 @@
-import React from 'react'
-import { Text, View, TouchableOpacity } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { Text, View, TouchableOpacity, TextInput } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { firebase } from '../../firebase/config'
 import styles from './styles'
@@ -10,8 +10,39 @@ export interface HomeScreenProps {
     country: string
 }
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ email, fullName, country }) => {
-    console.log(email, fullName, country);
+const HomeScreen: React.FC<HomeScreenProps> = ({ email, fullName, country, uid }) => {
+    console.log(email, fullName, country, uid);
+    const [fullname, setFullname] = useState('');
+    const [mail, setMail] = useState('');
+    const [count, setCount] = useState('');
+    const [loadSave, setLoadSave] = useState(false);
+
+    useEffect(() => {
+        if (email)
+            setMail(email);
+
+        if (fullName)
+            setFullname(fullName);
+
+        if (country)
+            setCount(country);
+    }, []);
+
+    function save(uid: string){
+        const usersRef = firebase.firestore().collection('users')
+                usersRef
+                    .doc(uid)
+                    .set({email: mail, fullName: fullname, country: count, id: uid})
+                    .then(() => {
+                        setLoadSave(false);
+                    })
+                    .catch((error) => {
+                        setLoadSave(false);
+                        alert(error)
+                    });
+    }
+
+
     const { navigate } = useNavigation();
     return (
         <>
@@ -19,9 +50,44 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ email, fullName, country }) => 
                 <View style={styles.profile}>
 
                     <View style={styles.profileInfo}>
-                        <Text style={styles.name}>{fullName}</Text>
-                        <Text style={styles.other}>{email}</Text>
-                        <Text style={styles.other}>{country}</Text>
+
+                        <TextInput
+                            style={styles.input}
+                            placeholder='Nome Completo'
+                            placeholderTextColor="#aaaaaa"
+                            onChangeText={(text) => setFullname(text)}
+                            value={fullName}
+                            underlineColorAndroid="transparent"
+                            autoCapitalize="none"
+                        />
+
+                        <TextInput
+                            style={styles.input}
+                            placeholder='E-mail'
+                            placeholderTextColor="#aaaaaa"
+                            onChangeText={(text) => setMail(text)}
+                            value={mail}
+                            underlineColorAndroid="transparent"
+                            autoCapitalize="none"
+                        />
+
+                        <TextInput
+                            style={styles.input}
+                            placeholder='País'
+                            placeholderTextColor="#aaaaaa"
+                            onChangeText={(text) => setCount(text)}
+                            value={count}
+                            underlineColorAndroid="transparent"
+                            autoCapitalize="none"
+                        />
+                        <TouchableOpacity
+                            style={[styles.button, loadSave ? styles.buttonDisabled : {}]}
+                            onPress={() => { save(uid) }}
+                            disabled={loadSave}>
+
+                            {loadSave ? <Text style={styles.buttonTitle}>...</Text> :
+                                <Text style={styles.buttonTitle}>Salvar</Text>}
+                        </TouchableOpacity>
                     </View>
 
                 </View>

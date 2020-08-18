@@ -37,8 +37,9 @@ export default function SelectLoginScreen() {
         await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
         const credential = firebase.auth.GoogleAuthProvider.credential(result.idToken, result.accessToken);
         const googleProfileData = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
-        onLoginSuccess({ country: googleProfileData.additionalUserInfo.profile.locale, 
-          fullName: googleProfileData.additionalUserInfo.profile.name});
+        const data = await firebase.firestore().collection('users').doc(googleProfileData.user.uid).get();
+        console.log(data.data());
+        onLoginSuccess({uid: googleProfileData.user.uid, ...data.data()});
       }
     } catch ({ message }) {
       alert('login: Error:' + message);
@@ -56,7 +57,10 @@ export default function SelectLoginScreen() {
         await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
         const facebookProfileData = await firebase.auth().signInWithCredential(credential);
-        onLoginSuccess({fullName: facebookProfileData.additionalUserInfo.profile.name});
+        console.log(facebookProfileData);
+        const data = await firebase.firestore().collection('users').doc(facebookProfileData.user.uid).get();
+        console.log(data.data());
+        onLoginSuccess({uid: facebookProfileData.user.uid, ...data.data()});
       }
     } catch ({ message }) {
       alert(`Facebook Login Error: ${message}`);

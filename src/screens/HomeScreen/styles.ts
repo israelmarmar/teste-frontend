@@ -2,22 +2,33 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#FFF',
-        borderWidth: 1,
-        borderColor: '#e6e6fa',
-        borderRadius: 8,
-        marginBottom: 16,
-        overflow: 'hidden'
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 40,
     },
     button: {
         backgroundColor: '#788eec',
         marginLeft: 30,
         marginRight: 30,
         marginTop: 20,
+        marginBottom: 20,
         height: 48,
         borderRadius: 5,
         alignItems: "center",
         justifyContent: 'center'
+    },
+    buttonDisabled: {
+        backgroundColor: '#BCC6F1'
+    },
+    input: {
+        height: 48,
+        borderRadius: 5,
+        overflow: 'hidden',
+        backgroundColor: 'white',
+        marginTop: 10,
+        marginBottom: 10,
+        padding: 16
     },
     buttonTitle: {
         color: 'white',
@@ -31,7 +42,8 @@ const styles = StyleSheet.create({
     },
 
     profileInfo: {
-        marginLeft: 16,
+        flex: 1,  
+        width: '100%'
     },
     name: {
         color: '#32264d',
@@ -39,7 +51,7 @@ const styles = StyleSheet.create({
     },
     other: {
         color: '#6a6180',
-        fontSize: 12,
+        fontSize: 20,
         marginTop: 4
     },
 

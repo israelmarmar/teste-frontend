@@ -7,8 +7,9 @@ import styles from './styles';
 import { auth } from 'firebase';
 
 export default function LoginScreen() {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loadEmail, setLoadEmail] = useState(false);
 
     const { navigate } = useNavigation();
 
@@ -17,11 +18,12 @@ export default function LoginScreen() {
     }
 
     const onLoginPress = () => {
+        setLoadEmail(true);
         firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
             .then((response: firebase.auth.UserCredential) => {
-                const uid : string = response.user.uid
+                const uid: string = response.user.uid
 
                 console.log(uid);
                 const usersRef = firebase.firestore().collection('users')
@@ -33,16 +35,18 @@ export default function LoginScreen() {
                             alert("User does not exist anymore.")
                             return;
                         }
-                        const user = firestoreDocument.data()
-                        console.log(user)
-                        navigate('Home', user)
+                        const user = firestoreDocument.data();
+                        console.log(user);
+                        setLoadEmail(false);
+                        navigate('Home', user);
                     })
                     .catch(error => {
                         alert(error)
                     });
             })
             .catch(error => {
-                alert(error)
+                alert(error);
+                setLoadEmail(false);
             })
     }
 
@@ -75,9 +79,12 @@ export default function LoginScreen() {
                     autoCapitalize="none"
                 />
                 <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => onLoginPress()}>
-                    <Text style={styles.buttonTitle}>Log in</Text>
+                    style={[styles.button, loadEmail?styles.buttonDisabled:{}]}
+                    onPress={() => onLoginPress()}
+                    disabled={loadEmail}>
+
+                    {loadEmail ? <Text style={styles.buttonTitle}>...</Text> :
+                        <Text style={styles.buttonTitle}>Log in</Text>}
                 </TouchableOpacity>
                 <View style={styles.footerView}>
                     <Text style={styles.footerText}>Não tem conta? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Cadastrar</Text></Text>
