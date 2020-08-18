@@ -42,6 +42,9 @@ export default StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold"
     },
+    buttonDisabled: {
+        backgroundColor: '#BCC6F1'
+    },
     footerView: {
         flex: 1,
         alignItems: "center",

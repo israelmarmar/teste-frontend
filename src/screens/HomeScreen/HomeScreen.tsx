@@ -12,16 +12,16 @@ export interface HomeScreenProps {
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ email, fullName, country, uid }) => {
     console.log(email, fullName, country, uid);
-    const [fullname, setFullname] = useState(fullName);
-    const [mail, setMail] = useState(email);
-    const [count, setCount] = useState(country);
+    const [fullNameState, setFullName] = useState(fullName);
+    const [emailState, setEmail] = useState(email);
+    const [countryState, setCountry] = useState(country);
     const [loadSave, setLoadSave] = useState(false);
 
     function save(uid: string){
         const usersRef = firebase.firestore().collection('users')
                 usersRef
                     .doc(uid)
-                    .set({email: mail, fullName: fullname, country: count, id: uid})
+                    .set({email: emailState, fullName: fullNameState, country: countryState, id: uid})
                     .then(() => {
                         setLoadSave(false);
                     })
@@ -44,8 +44,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ email, fullName, country, uid }
                             style={styles.input}
                             placeholder='Nome Completo'
                             placeholderTextColor="#aaaaaa"
-                            onChangeText={(text) => setFullname(text)}
-                            value={fullname}
+                            onChangeText={(text) => setFullName(text)}
+                            value={fullNameState}
                             underlineColorAndroid="transparent"
                             autoCapitalize="none"
                         />
@@ -54,8 +54,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ email, fullName, country, uid }
                             style={styles.input}
                             placeholder='E-mail'
                             placeholderTextColor="#aaaaaa"
-                            onChangeText={(text) => setMail(text)}
-                            value={mail}
+                            onChangeText={(text) => setEmail(text)}
+                            value={emailState}
                             underlineColorAndroid="transparent"
                             autoCapitalize="none"
                         />
@@ -64,8 +64,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ email, fullName, country, uid }
                             style={styles.input}
                             placeholder='País'
                             placeholderTextColor="#aaaaaa"
-                            onChangeText={(text) => setCount(text)}
-                            value={count}
+                            onChangeText={(text) => setCountry(text)}
+                            value={countryState}
                             underlineColorAndroid="transparent"
                             autoCapitalize="none"
                         />

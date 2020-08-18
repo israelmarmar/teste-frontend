@@ -11,6 +11,7 @@ export default function RegistrationScreen() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [loadSave, setLoadSave] = useState(false)
 
     const { navigate } = useNavigation()
 
@@ -19,6 +20,7 @@ export default function RegistrationScreen() {
     }
 
     const onRegisterPress = () => {
+        setLoadSave(true);
         if (password !== confirmPassword) {
             alert("Passwords don't match.")
             return
@@ -40,13 +42,16 @@ export default function RegistrationScreen() {
                     .set(data)
                     .then(() => {
                         navigate('Home', data)
+                        setLoadSave(false)
                     })
                     .catch((error) => {
                         alert(error)
                     });
+                    
             })
             .catch((error) => {
                 alert(error)
+                setLoadSave(false);
         });
     }
 
@@ -108,9 +113,11 @@ export default function RegistrationScreen() {
                     autoCapitalize="none"
                 />
                 <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => onRegisterPress()}>
-                    <Text style={styles.buttonTitle}>Criar conta</Text>
+                    style={[styles.button, loadSave ? styles.buttonDisabled : {}]}
+                    onPress={() => onRegisterPress()}
+                    disabled={loadSave}>
+                    {loadSave ? <Text style={styles.buttonTitle}>...</Text> :
+                                <Text style={styles.buttonTitle}>Criar Conta</Text>}
                 </TouchableOpacity>
                 <View style={styles.footerView}>
                     <Text style={styles.footerText}>Já possui conta? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Log in</Text></Text>
