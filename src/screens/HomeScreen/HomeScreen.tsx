@@ -12,21 +12,10 @@ export interface HomeScreenProps {
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ email, fullName, country, uid }) => {
     console.log(email, fullName, country, uid);
-    const [fullname, setFullname] = useState('');
-    const [mail, setMail] = useState('');
-    const [count, setCount] = useState('');
+    const [fullname, setFullname] = useState(fullName);
+    const [mail, setMail] = useState(email);
+    const [count, setCount] = useState(country);
     const [loadSave, setLoadSave] = useState(false);
-
-    useEffect(() => {
-        if (email)
-            setMail(email);
-
-        if (fullName)
-            setFullname(fullName);
-
-        if (country)
-            setCount(country);
-    }, []);
 
     function save(uid: string){
         const usersRef = firebase.firestore().collection('users')
@@ -56,7 +45,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ email, fullName, country, uid }
                             placeholder='Nome Completo'
                             placeholderTextColor="#aaaaaa"
                             onChangeText={(text) => setFullname(text)}
-                            value={fullName}
+                            value={fullname}
                             underlineColorAndroid="transparent"
                             autoCapitalize="none"
                         />
