@@ -4,8 +4,9 @@ import { useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { firebase } from '../../firebase/config';
 import styles from './styles';
+import * as Facebook from 'expo-facebook';
 import * as AppAuth from 'expo-app-auth';
-import { ANDROID_CLIENT_ID, WEB_CLIENT_ID } from '../../utils/keys';
+import { ANDROID_CLIENT_ID, WEB_CLIENT_ID, FACEBOOK_CLIENT_ID } from '../../utils/keys';
 
 export default function SelectLoginScreen() {
 
@@ -45,6 +46,23 @@ export default function SelectLoginScreen() {
 
   }
 
+  async function signInWithFacebook() {
+    try {
+      await Facebook.initializeAsync(FACEBOOK_CLIENT_ID);
+      const { type, token } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ['public_profile'],
+      });
+      if (type === 'success') {
+        await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        const credential = firebase.auth.FacebookAuthProvider.credential(token);
+        const facebookProfileData = await firebase.auth().signInWithCredential(credential);
+        onLoginSuccess({fullName: facebookProfileData.additionalUserInfo.profile.name});
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+    }
+  }
+
 
   return (
     <View style={styles.container}>
@@ -67,7 +85,7 @@ export default function SelectLoginScreen() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => { navigate('Login') }}>
+        onPress={() => signInWithFacebook() }>
         <FontAwesome name={'facebook-square'} style={styles.icon} />
         <Text style={styles.buttonTitle}>Login com Facebook</Text>
       </TouchableOpacity>

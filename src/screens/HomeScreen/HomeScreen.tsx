@@ -14,22 +14,24 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ email, fullName, country }) => 
     console.log(email, fullName, country);
     const { navigate } = useNavigation();
     return (
-        <View style={styles.container}>
-            <View style={styles.profile}>
+        <>
+            <View style={styles.container}>
+                <View style={styles.profile}>
 
-                <View style={styles.profileInfo}>
-                    <Text style={styles.name}>{fullName}</Text>
-                    <Text style={styles.other}>{email}</Text>
-                    <Text style={styles.other}>{country}</Text>
+                    <View style={styles.profileInfo}>
+                        <Text style={styles.name}>{fullName}</Text>
+                        <Text style={styles.other}>{email}</Text>
+                        <Text style={styles.other}>{country}</Text>
+                    </View>
+
                 </View>
-    
+
             </View>
 
-            <TouchableOpacity style={styles.button} onPress={()=>{firebase.auth().signOut();navigate('Select');}}>
-                    <Text style={styles.buttonTitle}>Sair</Text>
+            <TouchableOpacity style={styles.button} onPress={() => { firebase.auth().signOut(); navigate('Select'); }}>
+                <Text style={styles.buttonTitle}>Sair</Text>
             </TouchableOpacity>
-
-        </View>
+        </>
     )
 }
 

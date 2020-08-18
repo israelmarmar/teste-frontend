@@ -54,7 +54,7 @@ export default function App() {
         {user ? (
           <>
             <Stack.Screen name="Home">
-              {props => <HomeScreen {...(props.route.params ? props: user)} />}
+              {props => <HomeScreen {...(props.route.params ? props.route.params: user)} />}
             </Stack.Screen>
             <Stack.Screen name="Select" component={SelectLoginScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
@@ -66,7 +66,7 @@ export default function App() {
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="Registration" component={RegistrationScreen} />
               <Stack.Screen name="Home">
-                {props => <HomeScreen  {...(props.route.params)} />}
+                {props => <HomeScreen  {...(props.route.params ? props.route.params: user)} />}
               </Stack.Screen>
             </>
           )}

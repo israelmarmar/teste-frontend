@@ -16,6 +16,7 @@
     "base-64": "^0.1.0",
     "expo": "~38.0.8",
     "expo-app-auth": "9.1.1",
+    "expo-facebook": "^8.2.1",
     "expo-google-app-auth": "^8.1.2",
     "expo-google-sign-in": "~8.2.1",
     "expo-splash-screen": "^0.5.0",
